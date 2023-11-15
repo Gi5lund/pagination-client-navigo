@@ -49,3 +49,10 @@ window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
   alert('Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber
       + ' Column: ' + column + ' StackTrace: ' + errorObj);
 }
+
+function onWindowResize(){
+  const width = window.innerWidth
+  document.getElementById('width').innerText = ""+width
+}
+window.addEventListener('resize', onWindowResize)
+onWindowResize() //Call manually to display initial width
