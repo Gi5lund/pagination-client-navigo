@@ -13,11 +13,7 @@ let isInitialized = false;
 export async function initBooks(match) {
   //TODO: Use the match argument to read the page, size and sort parameters from the query string 
   //and initialize pageSize, sortColumn and sortOrder accordingly
-  const page = match?.params?.page || 0
-  pageSize = match?.params?.size || pageSize
-  sortColumn = match?.params?.sort?.split(",")[0] || sortColumn
-  sortDirection = match?.params?.sort.split(",")[1] || "asc"
-
+  const page =  0
 
   if (!isInitialized) {  //No reason to setup event handlers if it's already been done
     isInitialized = true;
@@ -40,9 +36,6 @@ function handleSortClick(evt) {
   const target = evt.target
   if (!target.id.startsWith("sort-")) return
   //TODO Add the missing sort functionality here
-  sortColumn = target.id.substring(5)
-  sortDirection = target.dataset.sort_direction === 'asc' ? 'desc' : 'asc'
-  target.dataset.sort_direction = sortDirection
   fetchData();
 }
 
@@ -50,15 +43,12 @@ async function fetchData(page = 0) {
   const size = pageSize
   //Build a query string like this to match expectations on the server: ?page=0&size=10&sort=author,desc
   queryString = `?page=${page}&size=${size}&sort=${sortColumn},${sortDirection}`
-  const data = await fetch(`${API_ENDPOINT}${queryString}`).then(res => handleHttpErrors(res))//TODO: Handle error cases
+  const data = await fetch(`${API_ENDPOINT}${queryString}`).then(res => res.json())//TODO: Handle error cases
   displayData(data.content);
   displayPagination(data.totalPages, page);
 
-   //TODO Update URL here,  without forcing an actual navigation step
-  const navigoRoute = "books"
-  window.router?.navigate(`/${navigoRoute}${queryString}`, { callHandler: false, updateBrowserURL: true })
+  //TODO Update URL here,  without forcing an actual navigation step
   
-
 }
 
 function displayData(books) {
